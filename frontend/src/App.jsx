@@ -32,7 +32,7 @@ const [chatMessages, setChatMessages] = useState([
     try {
 
       const response = await axios.post(
-        "http://localhost:5000/api/iam/generate",
+       "https://cloud-security-support-agent.onrender.com/api/iam/generate",
         {
           prompt: inputText
         }
@@ -63,7 +63,7 @@ const [chatMessages, setChatMessages] = useState([
     setAiAnalysis("🤖 AI is analyzing...");
 
     const response = await axios.post(
-      "http://localhost:5000/api/ai/analyze",
+      "https://cloud-security-support-agent.onrender.com/api/ai/analyze",
       {
         content: generatedPolicy
       }
@@ -140,7 +140,7 @@ const generateArchitecture = () => {
     try {
 
       const response = await axios.post(
-        "http://localhost:5000/api/terraform/analyze",
+        "https://cloud-security-support-agent.onrender.com/api/terraform/analyze",
         {
           terraformCode
         }
@@ -283,7 +283,7 @@ const downloadPDF = () => {
     );
 
     const response = await axios.post(
-      "http://localhost:5000/api/ai/chat",
+      "https://cloud-security-support-agent.onrender.com/api/ai/chat",
       {
         question: chatQuestion
       }
