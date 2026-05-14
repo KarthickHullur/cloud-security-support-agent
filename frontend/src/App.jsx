@@ -142,7 +142,7 @@ const generateArchitecture = () => {
       const response = await axios.post(
         "https://cloud-security-support-agent.onrender.com/api/terraform/analyze",
         {
-          terraformCode
+           terraform: terraformCode
         }
       );
 
