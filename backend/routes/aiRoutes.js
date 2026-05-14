@@ -7,54 +7,104 @@ const Groq = require("groq-sdk");
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY
 });
-console.log(process.env.GROQ_API_KEY);
 
-router.post("/analyze", async (req, res) => {
 
-  try {
 
-    const { content } = req.body;
+// AI SECURITY ANALYSIS
 
-    const completion =
-      await groq.chat.completions.create({
+router.post(
+  "/analyze",
+  async (req, res) => {
 
-        messages: [
+    try {
 
-          {
-            role: "system",
-            content:
-              "You are an AWS cloud security expert. Analyze IAM policies and Terraform configurations. Give risks, severity, and remediation."
-          },
+      const { policy } = req.body;
 
-          {
-            role: "user",
-            content:
-              `Analyze this cloud configuration:\n\n${content}`
-          }
+      const completion =
+        await groq.chat.completions.create({
 
-        ],
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are a cloud security expert."
+            },
+            {
+              role: "user",
+              content:
+                `Analyze this IAM policy:\n${JSON.stringify(policy)}`
+            }
+          ],
 
-        model: "llama-3.1-8b-instant",
+          model: "llama3-8b-8192"
 
-        temperature: 0.4
+        });
 
+      res.json({
+        analysis:
+          completion.choices[0].message.content
       });
 
-    const analysis =
-      completion.choices[0].message.content;
+    } catch (error) {
 
-    res.json({ analysis });
+      console.log(error);
 
-  } catch (error) {
+      res.status(500).json({
+        error: "AI analysis failed"
+      });
 
-    console.log(error);
-
-    res.status(500).json({
-      error: "AI analysis failed"
-    });
+    }
 
   }
+);
 
-});
+
+
+// AI CHAT ASSISTANT
+
+router.post(
+  "/chat",
+  async (req, res) => {
+
+    try {
+
+      const { question } = req.body;
+
+      const completion =
+        await groq.chat.completions.create({
+
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are an AWS cloud security assistant."
+            },
+            {
+              role: "user",
+              content: question
+            }
+          ],
+
+          model: "llama3-8b-8192"
+
+        });
+
+      res.json({
+        answer:
+          completion.choices[0].message.content
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+      res.status(500).json({
+        error: "AI chat failed"
+      });
+
+    }
+
+  }
+);
 
 module.exports = router;
