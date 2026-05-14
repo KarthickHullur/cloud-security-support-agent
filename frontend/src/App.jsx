@@ -65,7 +65,7 @@ const [chatMessages, setChatMessages] = useState([
     const response = await axios.post(
       "https://cloud-security-support-agent.onrender.com/api/ai/analyze",
       {
-        content: generatedPolicy
+        policy: generatedPolicy
       }
     );
 
